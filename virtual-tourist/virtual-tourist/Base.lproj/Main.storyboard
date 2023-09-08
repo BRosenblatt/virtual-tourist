@@ -3,6 +3,7 @@
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Map view configurations" minToolsVersion="14.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -27,23 +28,38 @@
         <!--TravelLocationsMapViewController-->
         <scene sceneID="tRz-zC-Lmd">
             <objects>
-                <viewController title="TravelLocationsMapViewController" id="Jzw-iq-RCi" sceneMemberID="viewController">
+                <viewController title="TravelLocationsMapViewController" id="Jzw-iq-RCi" customClass="TravelLocationsMapViewController" customModule="virtual_tourist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="y9a-sf-CFW">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vNB-Ar-aW7">
+                                <rect key="frame" x="0.0" y="103" width="393" height="715"/>
+                                <standardMapConfiguration key="preferredConfiguration"/>
+                            </mapView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="JGz-Hf-NdT"/>
-                        <color key="backgroundColor" systemColor="systemBlueColor"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="JGz-Hf-NdT" firstAttribute="bottom" secondItem="vNB-Ar-aW7" secondAttribute="bottom" id="GCa-Pv-hAr"/>
+                            <constraint firstItem="JGz-Hf-NdT" firstAttribute="trailing" secondItem="vNB-Ar-aW7" secondAttribute="trailing" id="Td8-Gb-Q3Z"/>
+                            <constraint firstItem="vNB-Ar-aW7" firstAttribute="leading" secondItem="JGz-Hf-NdT" secondAttribute="leading" id="YdB-qH-ILK"/>
+                            <constraint firstItem="vNB-Ar-aW7" firstAttribute="top" secondItem="JGz-Hf-NdT" secondAttribute="top" id="ud8-VL-Zmv"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="YoV-T0-QZG"/>
+                    <connections>
+                        <outlet property="mapView" destination="vNB-Ar-aW7" id="qq9-Hv-8DY"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ce3-rV-Gsz" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-384" y="-166"/>
+            <point key="canvasLocation" x="-385.49618320610688" y="-166.19718309859155"/>
         </scene>
         <!--PhotoAlbumViewController-->
         <scene sceneID="hhB-HF-hAf">
             <objects>
-                <viewController title="PhotoAlbumViewController" id="474-3l-ov5" sceneMemberID="viewController">
+                <viewController title="PhotoAlbumViewController" id="474-3l-ov5" customClass="PhotoAlbumViewController" customModule="virtual_tourist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EQP-1h-s7n">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -58,8 +74,8 @@
         </scene>
     </scenes>
     <resources>
-        <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemPurpleColor">
             <color red="0.68627450980392157" green="0.32156862745098042" blue="0.87058823529411766" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
