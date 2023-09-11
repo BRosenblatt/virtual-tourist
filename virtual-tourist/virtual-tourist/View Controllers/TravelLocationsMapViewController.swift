@@ -9,8 +9,11 @@ import UIKit
 import MapKit
 
 class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIGestureRecognizerDelegate {
+    var pins: [Pin] = []
+    var dataController: DataController!
     
     @IBOutlet weak var mapView: MKMapView!
+    
     
     let gestureRecognizer = UIGestureRecognizer()
     let longPressGestureRecognizer = UILongPressGestureRecognizer()
@@ -74,6 +77,12 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
             pinView?.annotation = annotation
         }
         return pinView
+    }
+    
+    // MARK: Associate coordinates with pin
+    
+    func storePinCoordinates() {
+        var pins = Pin(context: )
     }
     
     // MARK: - Handle pinWasTapped action
