@@ -59,7 +59,7 @@
         <!--PhotoAlbumViewController-->
         <scene sceneID="hhB-HF-hAf">
             <objects>
-                <viewController title="PhotoAlbumViewController" id="474-3l-ov5" customClass="PhotoAlbumViewController" customModule="virtual_tourist" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PhotoAlbumViewController" title="PhotoAlbumViewController" id="474-3l-ov5" customClass="PhotoAlbumViewController" customModule="virtual_tourist" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="EQP-1h-s7n">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

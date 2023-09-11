@@ -12,10 +12,15 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
     
     @IBOutlet weak var mapView: MKMapView!
     
-    let gestureRecognizer = UILongPressGestureRecognizer()
+    let gestureRecognizer = UIGestureRecognizer()
+    let longPressGestureRecognizer = UILongPressGestureRecognizer()
+    let tapGestureRecognizer = UITapGestureRecognizer()
+    let annotation = MKPointAnnotation()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        gestureRecognizer.delegate = self
         mapView.delegate = self
         mapView.isZoomEnabled = true
         mapView.isScrollEnabled = true
@@ -23,28 +28,28 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
         configureLongPressGesture()
     }
     
+    // MARK: - Handle long-press action
+    
     func configureLongPressGesture() {
-        gestureRecognizer.delegate = self
-        gestureRecognizer.numberOfTouchesRequired = 1
-        gestureRecognizer.minimumPressDuration = 0.5
-        gestureRecognizer.addTarget(self, action: #selector(handleLongPress))
+        longPressGestureRecognizer.numberOfTouchesRequired = 1
+        longPressGestureRecognizer.minimumPressDuration = 0.5
+        longPressGestureRecognizer.addTarget(self, action: #selector(handleLongPress))
         
-        mapView.addGestureRecognizer(gestureRecognizer)
+        mapView.addGestureRecognizer(longPressGestureRecognizer)
     }
     
     @objc func handleLongPress() {
         print("press")
-        guard gestureRecognizer.state == .began else {
+        guard longPressGestureRecognizer.state == .began else {
             return
         }
         // get x and y
-        let location = gestureRecognizer.location(in: mapView)
+        let location = longPressGestureRecognizer.location(in: mapView)
 
         // figure out how to get lat and long from x and y
         let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
         print(coordinate.latitude, coordinate.longitude)
         
-        let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
         mapView.addAnnotation(annotation)
     }
@@ -53,6 +58,8 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
         print("shouldRecognizeSimultaneous called")
         return true
     }
+    
+    // MARK: - Configure pinView
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseIdentifier = "pin"
@@ -67,6 +74,36 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
             pinView?.annotation = annotation
         }
         return pinView
+    }
+    
+    // MARK: - Handle pinWasTapped action
+    
+//    func pinWasTapped() {
+//        tapGestureRecognizer.numberOfTapsRequired = 1
+//        tapGestureRecognizer.addTarget(self, action: #selector(handleTap))
+//
+//        mapView.addGestureRecognizer(tapGestureRecognizer)
+//
+//        showphotoAlbumViewController()
+//    }
+//
+//    @objc func handleTap() {
+//        guard tapGestureRecognizer.state == .began else {
+//            return
+//        }
+//
+//        let tappedPin = mapView.annotations.first { annotation in
+//
+//        }
+//    }
+    
+    // MARK: Present PhotoAlbumViewController
+    
+    func showphotoAlbumViewController() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let photoAlbumViewController = storyboard.instantiateViewController(withIdentifier: "PhotoAlbumViewController")
+        photoAlbumViewController.modalPresentationStyle = .fullScreen
+        self.present(photoAlbumViewController, animated: true)
     }
 }
 
