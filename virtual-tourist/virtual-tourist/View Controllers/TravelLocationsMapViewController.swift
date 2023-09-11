@@ -14,13 +14,11 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
     
     @IBOutlet weak var mapView: MKMapView!
     
-    
     let gestureRecognizer = UIGestureRecognizer()
     let longPressGestureRecognizer = UILongPressGestureRecognizer()
     let tapGestureRecognizer = UITapGestureRecognizer()
     let annotation = MKPointAnnotation()
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         gestureRecognizer.delegate = self
@@ -28,6 +26,7 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
         mapView.isZoomEnabled = true
         mapView.isScrollEnabled = true
         
+        fetchPinsFromStore()
         configureLongPressGesture()
     }
     
@@ -36,13 +35,12 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
     func configureLongPressGesture() {
         longPressGestureRecognizer.numberOfTouchesRequired = 1
         longPressGestureRecognizer.minimumPressDuration = 0.5
-        longPressGestureRecognizer.addTarget(self, action: #selector(handleLongPress))
+        longPressGestureRecognizer.addTarget(self, action: #selector(addNewPin))
         
         mapView.addGestureRecognizer(longPressGestureRecognizer)
     }
     
-    @objc func handleLongPress() {
-        print("press")
+    @objc func addNewPin() {
         guard longPressGestureRecognizer.state == .began else {
             return
         }
@@ -55,6 +53,7 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
         
         annotation.coordinate = coordinate
         mapView.addAnnotation(annotation)
+        storeNewPin()
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -79,10 +78,25 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
         return pinView
     }
     
-    // MARK: Associate coordinates with pin
+    // MARK: Fetch pins from store
     
-    func storePinCoordinates() {
-        var pins = Pin(context: )
+    func fetchPinsFromStore() {
+        let fetchRequest = Pin.fetchRequest()
+        do {
+            pins = try dataController.viewContext.fetch(fetchRequest)
+        } catch {
+            print("Couldn't fetch: \(error)")
+        }
+    }
+    
+    func storeNewPin() {
+        dataController.viewContext.perform {
+            let pin = Pin(context: self.dataController.viewContext)
+            pin.longitude = self.annotation.coordinate.longitude
+            pin.latitude = self.annotation.coordinate.latitude
+            pin.identifier = ""
+            try? self.dataController.viewContext.save()
+        }
     }
     
     // MARK: - Handle pinWasTapped action
