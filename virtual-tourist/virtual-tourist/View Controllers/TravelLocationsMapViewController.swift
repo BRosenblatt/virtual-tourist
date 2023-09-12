@@ -115,22 +115,16 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
     
     // MARK: - Handle pinWasTapped action
     
-//    func pinWasTapped() {
-//        tapGestureRecognizer.numberOfTapsRequired = 1
-//        tapGestureRecognizer.addTarget(self, action: #selector(handleTap))
-//
-//        mapView.addGestureRecognizer(tapGestureRecognizer)
-//
-//        showphotoAlbumViewController()
-//    }
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        showPhotoAlbumViewController()
+    }
     
     // MARK: Present PhotoAlbumViewController
     
-    func f() {
+    func showPhotoAlbumViewController() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let photoAlbumViewController = storyboard.instantiateViewController(withIdentifier: "PhotoAlbumViewController")
-        photoAlbumViewController.modalPresentationStyle = .fullScreen
-        self.present(photoAlbumViewController, animated: true)
+        let photoAlbumCollectionViewController = storyboard.instantiateViewController(withIdentifier: "PhotoAlbumCollectionViewController")
+        navigationController?.pushViewController(photoAlbumCollectionViewController, animated: true)
     }
 }
 
