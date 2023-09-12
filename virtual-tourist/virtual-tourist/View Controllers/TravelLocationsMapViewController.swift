@@ -17,7 +17,6 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
     let gestureRecognizer = UIGestureRecognizer()
     let longPressGestureRecognizer = UILongPressGestureRecognizer()
     let tapGestureRecognizer = UITapGestureRecognizer()
-    let annotation = MKPointAnnotation()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,9 +50,11 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
         let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
         print(coordinate.latitude, coordinate.longitude)
         
+        let annotation = MKPointAnnotation()
+
         annotation.coordinate = coordinate
         mapView.addAnnotation(annotation)
-        storeNewPin()
+        storeNewPin(annotation: annotation)
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
@@ -84,17 +85,30 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
         let fetchRequest = Pin.fetchRequest()
         do {
             pins = try dataController.viewContext.fetch(fetchRequest)
+            var annotations: [MKAnnotation] = []
+            annotations = pins.map({ pin in
+                annotationForPin(pin)
+            })
+            mapView.addAnnotations(annotations)
         } catch {
             print("Couldn't fetch: \(error)")
         }
     }
     
-    func storeNewPin() {
+    func annotationForPin(_ pin: Pin) -> MKAnnotation {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate.latitude = pin.latitude
+        annotation.coordinate.longitude = pin.longitude
+        return annotation
+    }
+    
+    func storeNewPin(annotation: MKPointAnnotation) {
         dataController.viewContext.perform {
             let pin = Pin(context: self.dataController.viewContext)
-            pin.longitude = self.annotation.coordinate.longitude
-            pin.latitude = self.annotation.coordinate.latitude
-            pin.identifier = ""
+            pin.longitude = annotation.coordinate.longitude
+            pin.latitude = annotation.coordinate.latitude
+            pin.identifier = UUID().uuidString
+            self.pins.append(pin)
             try? self.dataController.viewContext.save()
         }
     }
@@ -109,20 +123,10 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
 //
 //        showphotoAlbumViewController()
 //    }
-//
-//    @objc func handleTap() {
-//        guard tapGestureRecognizer.state == .began else {
-//            return
-//        }
-//
-//        let tappedPin = mapView.annotations.first { annotation in
-//
-//        }
-//    }
     
     // MARK: Present PhotoAlbumViewController
     
-    func showphotoAlbumViewController() {
+    func f() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let photoAlbumViewController = storyboard.instantiateViewController(withIdentifier: "PhotoAlbumViewController")
         photoAlbumViewController.modalPresentationStyle = .fullScreen
