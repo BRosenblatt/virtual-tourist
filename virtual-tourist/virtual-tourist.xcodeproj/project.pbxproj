@@ -16,6 +16,7 @@
 		32B26EB32AAA43CB00C7EE41 /* PhotoAlbumCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B26EB22AAA43CB00C7EE41 /* PhotoAlbumCollectionViewController.swift */; };
 		32B26EB72AAA634F00C7EE41 /* Virtual-Tourist.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 32B26EB52AAA634F00C7EE41 /* Virtual-Tourist.xcdatamodeld */; };
 		32B26EB92AAF937F00C7EE41 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B26EB82AAF937F00C7EE41 /* DataController.swift */; };
+		32B26EBD2AB0E30300C7EE41 /* PhotoAlbumCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32B26EBC2AB0E30300C7EE41 /* PhotoAlbumCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		32B26EB22AAA43CB00C7EE41 /* PhotoAlbumCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumCollectionViewController.swift; sourceTree = "<group>"; };
 		32B26EB62AAA634F00C7EE41 /* Virtual-Tourist.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Virtual-Tourist.xcdatamodel"; sourceTree = "<group>"; };
 		32B26EB82AAF937F00C7EE41 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		32B26EBC2AB0E30300C7EE41 /* PhotoAlbumCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 		32B26E9C2AAA343B00C7EE41 /* virtual-tourist */ = {
 			isa = PBXGroup;
 			children = (
+				32B26EBB2AB0E2F000C7EE41 /* Views */,
 				32B26EB42AAA611200C7EE41 /* Model */,
 				32B26EB12AAA439900C7EE41 /* View Controllers */,
 				32B26E9D2AAA343B00C7EE41 /* AppDelegate.swift */,
@@ -90,6 +93,14 @@
 				32B26EB82AAF937F00C7EE41 /* DataController.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		32B26EBB2AB0E2F000C7EE41 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				32B26EBC2AB0E30300C7EE41 /* PhotoAlbumCollectionViewCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -166,6 +177,7 @@
 				32B26EA22AAA343B00C7EE41 /* TravelLocationsMapViewController.swift in Sources */,
 				32B26EB92AAF937F00C7EE41 /* DataController.swift in Sources */,
 				32B26E9E2AAA343B00C7EE41 /* AppDelegate.swift in Sources */,
+				32B26EBD2AB0E30300C7EE41 /* PhotoAlbumCollectionViewCell.swift in Sources */,
 				32B26EA02AAA343B00C7EE41 /* SceneDelegate.swift in Sources */,
 				32B26EB72AAA634F00C7EE41 /* Virtual-Tourist.xcdatamodeld in Sources */,
 				32B26EB32AAA43CB00C7EE41 /* PhotoAlbumCollectionViewController.swift in Sources */,
