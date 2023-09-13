@@ -113,17 +113,18 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
         }
     }
     
-    // MARK: - Handle pinWasTapped action
+    // MARK: - Handle pinWasTapped action & present PhotoAlbumViewController
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        showPhotoAlbumViewController()
-    }
-    
-    // MARK: Present PhotoAlbumViewController
-    
-    func showPhotoAlbumViewController() {
+        guard let latitude = view.annotation?.coordinate.latitude, let longitude = view.annotation?.coordinate.longitude else {
+            return
+        }
+        
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let photoAlbumCollectionViewController = storyboard.instantiateViewController(withIdentifier: "PhotoAlbumCollectionViewController")
+        let photoAlbumCollectionViewController = storyboard.instantiateViewController(withIdentifier: "PhotoAlbumCollectionViewController") as! PhotoAlbumCollectionViewController
+        photoAlbumCollectionViewController.pin = pins.first(where: { pin in
+            pin.latitude == latitude && pin.longitude == longitude
+        })
         navigationController?.pushViewController(photoAlbumCollectionViewController, animated: true)
     }
 }
