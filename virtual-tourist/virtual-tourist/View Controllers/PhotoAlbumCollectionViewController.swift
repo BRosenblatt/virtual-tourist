@@ -74,8 +74,8 @@ extension PhotoAlbumCollectionViewController {
     
     // MARK: - Delete photo when tapped
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let photoToDelete = IndexPath(item: indexPath.item, section: 0)
-//        photoData.remove(at: photoToDelete.item)
-//        collectionView.deleteItems(at: [photoToDelete])
+        let photoToDelete = IndexPath(item: indexPath.item, section: 0)
+        photoData.remove(at: photoToDelete.item)
+        collectionView.deleteItems(at: [photoToDelete])
     }
 }
