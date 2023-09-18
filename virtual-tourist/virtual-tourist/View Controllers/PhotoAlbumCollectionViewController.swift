@@ -52,31 +52,30 @@ class PhotoAlbumCollectionViewController: UICollectionViewController {
     
     
 extension PhotoAlbumCollectionViewController {
-        // MARK: - Get photo count
-        
-        override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-            return photoData.count
-        }
+    // MARK: - Get photo count
     
-        // MARK: Set up custom cell
-        override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoAlbumCollectionViewCell", for: indexPath) as! PhotoAlbumCollectionViewCell
-            let photo = photoData[indexPath.row]
-            FlickrAPIClient.requestImageFile(serverID: photo.server, secretID: photo.secret, id: photo.id) { image, error in
-                guard let image = image else {
-                    print("Couldn't fetch image")
-                    return
-                }
-                cell.photoImageView.image = image
-            }
-            return cell
-        }
-    
-        // MARK: - When photo is selected, delete and replace with new photo
-        override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-            print("")
-        }
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return photoData.count
     }
-
-
-
+    
+    // MARK: Set up custom cell
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoAlbumCollectionViewCell", for: indexPath) as! PhotoAlbumCollectionViewCell
+        let photo = photoData[indexPath.row]
+        FlickrAPIClient.requestImageFile(serverID: photo.server, secretID: photo.secret, id: photo.id) { image, error in
+            guard let image = image else {
+                print("Couldn't fetch image")
+                return
+            }
+            cell.photoImageView.image = image
+        }
+        return cell
+    }
+    
+    // MARK: - Delete photo when tapped
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let photoToDelete = IndexPath(item: indexPath.item, section: 0)
+//        photoData.remove(at: photoToDelete.item)
+//        collectionView.deleteItems(at: [photoToDelete])
+    }
+}

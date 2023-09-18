@@ -16,7 +16,6 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
     
     let gestureRecognizer = UIGestureRecognizer()
     let longPressGestureRecognizer = UILongPressGestureRecognizer()
-    let tapGestureRecognizer = UITapGestureRecognizer()
 
     override func viewDidLoad() {
         super.viewDidLoad()

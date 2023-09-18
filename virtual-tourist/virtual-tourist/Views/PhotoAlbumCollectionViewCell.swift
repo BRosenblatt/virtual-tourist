@@ -9,4 +9,9 @@ import UIKit
 
 class PhotoAlbumCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var photoImageView: UIImageView!
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        photoImageView.image = UIImage(systemName: "photo.circle.fill")
+    }
 }
