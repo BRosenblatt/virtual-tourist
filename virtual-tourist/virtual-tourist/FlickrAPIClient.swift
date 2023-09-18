@@ -19,7 +19,7 @@ class FlickrAPIClient {
         static let searchPhotoMethod = "flickr.photos.search" // https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=970768dc71c88bce017f3e6f8173237f&privacy_filter=1&media=photos&lat=0&lon=0&per_page=2&page=&format=rest
         
         case getPhotos(lat: Double, long: Double)
-        case getImageFile(serverID: String,  ownerID: String, secretID: String)
+        case getImageFile(serverID: String, id: String, secretID: String)
         
         var stringValue: String {
             switch self {
@@ -35,10 +35,10 @@ class FlickrAPIClient {
                 + "&per_page=\(FlickrAPIClient.photosPerPage)"
                 + "&page=0"
                 + "&format=json&nojsoncallback=1"
-            case .getImageFile(let serverID, let secretID, let ownerID):
+            case .getImageFile(let serverID, let id, let secretID):
                 return "https://live.staticflickr.com/"
-                + "\(serverID)"
-                + "\(ownerID)"
+                + "\(serverID)/"
+                + "\(id)"
                 + "_\(secretID)"
                 + ".jpg"
             }
@@ -50,7 +50,7 @@ class FlickrAPIClient {
     
     // MARK: - Call the searchPhotoMethod
     
-    class func getPhotosList(lat: Double, long: Double, completion: @escaping (SearchPhotosResponse?, Error?) -> Void) {
+    class func getPhotosList(lat: Double, long: Double, completion: @escaping ([PhotoData]?, Error?) -> Void) {
         let photosEndpoint = Endpoint.getPhotos(lat: lat, long: long).url
         let task = URLSession.shared.dataTask(with: photosEndpoint) { data, response, error in
             guard let data = data else {
@@ -63,8 +63,9 @@ class FlickrAPIClient {
             
             do {
                 let response = try decoder.decode(SearchPhotosResponse.self, from: data)
+                let result = response.photos.photo
                 DispatchQueue.main.async {
-                    completion(response, nil)
+                    completion(result, nil)
                 }
             } catch {
                 DispatchQueue.main.async {
@@ -75,10 +76,10 @@ class FlickrAPIClient {
         task.resume()
     }
     
-    // MARK: - Call the url for each photo. Need server id, secret id, and owner id from the SearchPhotosResponse to construct the url
+    // MARK: - Call the url for each photo. Need server id, secret id, and photo id from the SearchPhotosResponse to construct the url
     
-    class func requestImageFile(serverID: String, secretID: String, ownerID: String, completion: @escaping (UIImage?, Error?) -> Void) {
-        let url = Endpoint.getImageFile(serverID: serverID, ownerID: ownerID, secretID: secretID).url
+    class func requestImageFile(serverID: String, secretID: String, id: String, completion: @escaping (UIImage?, Error?) -> Void) {
+        let url = Endpoint.getImageFile(serverID: serverID, id: id, secretID: secretID).url
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data else {
                 DispatchQueue.main.async {
@@ -86,8 +87,10 @@ class FlickrAPIClient {
                 }
                 return
             }
-            let image = UIImage(data: data)
-            completion(image, nil)
+            DispatchQueue.main.async {
+                let image = UIImage(data: data)
+                completion(image, nil)
+            }
         }
         task.resume()
     }
