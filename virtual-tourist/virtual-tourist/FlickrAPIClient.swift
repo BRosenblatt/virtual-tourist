@@ -78,7 +78,10 @@ class FlickrAPIClient {
     
     // MARK: - Call the url for each photo. Need server id, secret id, and photo id from the SearchPhotosResponse to construct the url
     
-    class func requestImageFile(serverID: String, secretID: String, id: String, completion: @escaping (UIImage?, Error?) -> Void) {
+    class func requestImageFile(serverID: String?, secretID: String?, id: String?, completion: @escaping (UIImage?, Error?) -> Void) {
+        guard let serverID, let secretID, let id else {
+            return
+        }
         let url = Endpoint.getImageFile(serverID: serverID, id: id, secretID: secretID).url
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data else {

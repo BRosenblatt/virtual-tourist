@@ -124,6 +124,7 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
         photoAlbumCollectionViewController.pin = pins.first(where: { pin in
             pin.latitude == latitude && pin.longitude == longitude
         })
+        photoAlbumCollectionViewController.dataController = dataController
         navigationController?.pushViewController(photoAlbumCollectionViewController, animated: true)
     }
 }

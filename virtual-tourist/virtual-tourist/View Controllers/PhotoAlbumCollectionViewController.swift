@@ -2,15 +2,15 @@
 //  PhotoAlbumCollectionViewController.swift
 //  virtual-tourist
 //
-//  Created by Matt Kauper on 9/7/23.
+//  Created by Becca Kauper on 9/7/23.
 //
 
 import UIKit
+import CoreData
 
 class PhotoAlbumCollectionViewController: UICollectionViewController {
     var pin: Pin!
     var photos: [Photo] = []
-    var photoData: [PhotoData] = []
     var dataController: DataController!
     
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
@@ -36,8 +36,19 @@ class PhotoAlbumCollectionViewController: UICollectionViewController {
         collectionView.collectionViewLayout = flowLayout
     }
     
+    // MARK: - Get list of photos per pin based on location
+    
     func fetchPhotos() {
-        FlickrAPIClient.getPhotosList(lat: pin.latitude, long: pin.longitude, completion: handlePhotosResponse)
+        // if photos are saved in core data, use them
+        let photosForPin = fetchPhotosForPinFromCoreData()
+        
+        if photosForPin.isEmpty {
+            FlickrAPIClient.getPhotosList(lat: pin.latitude, long: pin.longitude, completion: handlePhotosResponse)
+            print("fetching from api")
+        } else {
+            photos = photosForPin
+            print("loading from core data")
+        }
     }
     
     func handlePhotosResponse(data: [PhotoData]?, error: Error?) {
@@ -45,37 +56,79 @@ class PhotoAlbumCollectionViewController: UICollectionViewController {
             print("Something went wrong")
             return
         }
-        photoData = data
+        dataController.viewContext.perform {
+            for photoData in data {
+                let photo = Photo(context: self.dataController.viewContext)
+                photo.id = photoData.id
+                photo.secret = photoData.secret
+                photo.server = photoData.server
+                photo.pinIdentifer = self.pin.identifier
+                photo.imageData = nil
+            }
+            try? self.dataController.viewContext.save()
+        }
+        photos = fetchPhotosForPinFromCoreData()
         collectionView.reloadData()
     }
 }
-    
-    
+
+
+// MARK: - Implement Collection View data source methods
+
 extension PhotoAlbumCollectionViewController {
+    
     // MARK: - Get photo count
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return photoData.count
+        return photos.count
     }
     
     // MARK: Set up custom cell
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoAlbumCollectionViewCell", for: indexPath) as! PhotoAlbumCollectionViewCell
-        let photo = photoData[indexPath.row]
-        FlickrAPIClient.requestImageFile(serverID: photo.server, secretID: photo.secret, id: photo.id) { image, error in
-            guard let image = image else {
-                print("Couldn't fetch image")
-                return
+        
+        if photos.count >= indexPath.item, let imageData = photos[indexPath.item].imageData {
+            cell.photoImageView.image = UIImage(data: imageData)
+        } else {
+            let photo = photos[indexPath.item]
+            FlickrAPIClient.requestImageFile(serverID: photo.server, secretID: photo.secret, id: photo.id) { image, error in
+                guard let image = image else {
+                    print("Couldn't fetch image")
+                    return
+                }
+                cell.photoImageView.image = image
             }
-            cell.photoImageView.image = image
         }
         return cell
+    }
+    
+    
+    // MARK: - Save image data for photo
+    
+    func saveImageData() {
+        
+    }
+    
+    // MARK: - Get a saved photo from Core Data
+    
+    func fetchPhotosForPinFromCoreData() -> [Photo] {
+        let fetchRequest = Photo.fetchRequest()
+        let predicate = NSPredicate(format: "pinIdentifer == %@", pin.identifier ?? "")
+        fetchRequest.predicate = predicate
+        do {
+            let photos = try dataController.viewContext.fetch(fetchRequest)
+            return photos
+        } catch {
+            print("Coudn't fetch \(error)")
+            return []
+        }
     }
     
     // MARK: - Delete photo when tapped
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let photoToDelete = IndexPath(item: indexPath.item, section: 0)
-        photoData.remove(at: photoToDelete.item)
+        photos.remove(at: photoToDelete.item)
         collectionView.deleteItems(at: [photoToDelete])
     }
 }
