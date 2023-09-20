@@ -39,7 +39,6 @@ class PhotoAlbumCollectionViewController: UICollectionViewController {
     // MARK: - Get list of photos per pin based on location
     
     func fetchPhotos() {
-        // if photos are saved in core data, use them
         let photosForPin = fetchPhotosForPinFromCoreData()
         
         if photosForPin.isEmpty {
@@ -56,17 +55,15 @@ class PhotoAlbumCollectionViewController: UICollectionViewController {
             print("Something went wrong")
             return
         }
-        dataController.viewContext.perform {
-            for photoData in data {
-                let photo = Photo(context: self.dataController.viewContext)
-                photo.id = photoData.id
-                photo.secret = photoData.secret
-                photo.server = photoData.server
-                photo.pinIdentifer = self.pin.identifier
-                photo.imageData = nil
-            }
-            try? self.dataController.viewContext.save()
+        for photoData in data {
+            let photo = Photo(context: self.dataController.viewContext)
+            photo.id = photoData.id
+            photo.secret = photoData.secret
+            photo.server = photoData.server
+            photo.pinIdentifer = self.pin.identifier
+            photo.imageData = nil
         }
+        try? self.dataController.viewContext.save()
         photos = fetchPhotosForPinFromCoreData()
         collectionView.reloadData()
     }
@@ -97,6 +94,7 @@ extension PhotoAlbumCollectionViewController {
                     print("Couldn't fetch image")
                     return
                 }
+                self.saveImageData(image: image, photo: photo)
                 cell.photoImageView.image = image
             }
         }
@@ -106,8 +104,11 @@ extension PhotoAlbumCollectionViewController {
     
     // MARK: - Save image data for photo
     
-    func saveImageData() {
-        
+    func saveImageData(image: UIImage, photo: Photo) {
+        dataController.viewContext.perform {
+            photo.imageData = image.jpegData(compressionQuality: 1.0)
+            try? self.dataController.viewContext.save()
+        }
     }
     
     // MARK: - Get a saved photo from Core Data
@@ -127,8 +128,9 @@ extension PhotoAlbumCollectionViewController {
     
     // MARK: - Delete photo when tapped
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let photoToDelete = IndexPath(item: indexPath.item, section: 0)
-        photos.remove(at: photoToDelete.item)
-        collectionView.deleteItems(at: [photoToDelete])
+        let photoToDelete = photos[indexPath.item]
+        photos.remove(at: indexPath.item)
+        collectionView.deleteItems(at: [indexPath])
+        dataController.viewContext.delete(photoToDelete)
     }
 }
