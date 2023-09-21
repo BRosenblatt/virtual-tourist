@@ -13,6 +13,7 @@ class FlickrAPIClient {
     static let apiKey = "970768dc71c88bce017f3e6f8173237f"
     static let photosPerPage = 20
     static let mediaType = "photos"
+    static var page: Int = 1
     
     enum Endpoint {
         static let baseURL = "https://www.flickr.com/services/rest/"
@@ -33,7 +34,7 @@ class FlickrAPIClient {
                 + "&lat=\(lat)"
                 + "&lon=\(long)"
                 + "&per_page=\(FlickrAPIClient.photosPerPage)"
-                + "&page=0"
+                + "&page=\(FlickrAPIClient.page)"
                 + "&format=json&nojsoncallback=1"
             case .getImageFile(let serverID, let id, let secretID):
                 return "https://live.staticflickr.com/"
@@ -50,8 +51,9 @@ class FlickrAPIClient {
     
     // MARK: - Call the searchPhotoMethod
     
-    class func getPhotosList(lat: Double, long: Double, completion: @escaping ([PhotoData]?, Error?) -> Void) {
+    class func getPhotosList(lat: Double, long: Double, page: Int, completion: @escaping (PhotoObject?, Error?) -> Void) {
         let photosEndpoint = Endpoint.getPhotos(lat: lat, long: long).url
+        print("photosEndpoint: \(photosEndpoint)")
         let task = URLSession.shared.dataTask(with: photosEndpoint) { data, response, error in
             guard let data = data else {
                 DispatchQueue.main.async {
@@ -63,7 +65,7 @@ class FlickrAPIClient {
             
             do {
                 let response = try decoder.decode(SearchPhotosResponse.self, from: data)
-                let result = response.photos.photo
+                let result = response.photos
                 DispatchQueue.main.async {
                     completion(result, nil)
                 }

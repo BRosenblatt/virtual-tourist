@@ -13,6 +13,7 @@ class PhotoAlbumCollectionViewController: UIViewController, UICollectionViewData
     var pin: Pin!
     var photos: [Photo] = []
     var dataController: DataController!
+    var photoIndex: PhotoIndex!
     
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var collectionView: UICollectionView!
@@ -42,32 +43,57 @@ class PhotoAlbumCollectionViewController: UIViewController, UICollectionViewData
     
     func fetchPhotos() {
         let photosForPin = fetchPhotosForPinFromCoreData()
+        let photoIndexForPin = fetchPhotoIndexForPinFromCoreData()
         
-        if photosForPin.isEmpty {
-            FlickrAPIClient.getPhotosList(lat: pin.latitude, long: pin.longitude, completion: handlePhotosResponse)
+        if photosForPin.isEmpty || photoIndexForPin == nil {
+            FlickrAPIClient.getPhotosList(lat: pin.latitude, long: pin.longitude, page: FlickrAPIClient.page, completion: handlePhotosResponse)
             print("fetching from api")
         } else {
             photos = photosForPin
+            photoIndex = photoIndexForPin
             print("loading from core data")
         }
     }
     
-    func handlePhotosResponse(data: [PhotoData]?, error: Error?) {
+    func handlePhotosResponse(data: PhotoObject?, error: Error?) {
         guard let data = data else {
             print("Something went wrong")
             return
         }
-        for photoData in data {
+        for photoData in data.photo {
             let photo = Photo(context: self.dataController.viewContext)
             photo.id = photoData.id
             photo.secret = photoData.secret
             photo.server = photoData.server
-            photo.pinIdentifer = self.pin.identifier
+            photo.pinIdentifier = self.pin.identifier
             photo.imageData = nil
         }
+        
+        let photoIndex = PhotoIndex(context: self.dataController.viewContext)
+        photoIndex.pages = Int64(data.pages)
+        photoIndex.pinIdentifier = self.pin.identifier
+        self.photoIndex = photoIndex
+        
         try? self.dataController.viewContext.save()
         photos = fetchPhotosForPinFromCoreData()
         collectionView.reloadData()
+    }
+    
+    @IBAction func reloadPhotosButton(_ sender: Any) {
+        guard photoIndex.pages > 1 else {
+            return
+        }
+        
+        let randomPage = randomlyGeneratePageNumber(maxPageCount: Int(photoIndex.pages))
+        
+        FlickrAPIClient.getPhotosList(lat: pin.latitude, long: pin.longitude, page: randomPage, completion: handlePhotosResponse(data:error:))
+        print(randomPage)
+    }
+    
+    func randomlyGeneratePageNumber(maxPageCount: Int) -> Int {
+        let randomPageNumber = Int.random(in: 2...maxPageCount)
+        
+        return randomPageNumber
     }
 }
 
@@ -117,7 +143,7 @@ extension PhotoAlbumCollectionViewController {
     
     func fetchPhotosForPinFromCoreData() -> [Photo] {
         let fetchRequest = Photo.fetchRequest()
-        let predicate = NSPredicate(format: "pinIdentifer == %@", pin.identifier ?? "")
+        let predicate = NSPredicate(format: "pinIdentifier == %@", pin.identifier ?? "")
         fetchRequest.predicate = predicate
         do {
             let photos = try dataController.viewContext.fetch(fetchRequest)
@@ -128,6 +154,19 @@ extension PhotoAlbumCollectionViewController {
         }
     }
     
+    func fetchPhotoIndexForPinFromCoreData() -> PhotoIndex? {
+        let fetchRequest = PhotoIndex.fetchRequest()
+        let predicate = NSPredicate(format: "pinIdentifier == %@", pin.identifier ?? "")
+        fetchRequest.predicate = predicate
+        do {
+            let photoIndex = try dataController.viewContext.fetch(fetchRequest)
+            return photoIndex.first
+        } catch {
+            print("Coudn't fetch \(error)")
+            return nil
+        }
+    }
+        
     // MARK: - Delete photo when tapped
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         dataController.viewContext.perform {
@@ -138,6 +177,4 @@ extension PhotoAlbumCollectionViewController {
             try? self.dataController.viewContext.save()
         }
     }
-    
-    
 }
