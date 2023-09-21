@@ -58,59 +58,79 @@
             <point key="canvasLocation" x="-385.49618320610688" y="-166.19718309859155"/>
         </scene>
         <!--Photo Album Collection View Controller-->
-        <scene sceneID="nBO-n3-L50">
+        <scene sceneID="Ynr-yR-cpd">
             <objects>
-                <collectionViewController storyboardIdentifier="PhotoAlbumCollectionViewController" id="uHq-GT-HBV" customClass="PhotoAlbumCollectionViewController" customModule="virtual_tourist" customModuleProvider="target" sceneMemberID="viewController">
-                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="M8d-rg-2TC">
+                <viewController storyboardIdentifier="PhotoAlbumCollectionViewController" id="weK-7y-YfS" customClass="PhotoAlbumCollectionViewController" customModule="virtual_tourist" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jmQ-Uc-2VJ">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="soE-Je-Vvt">
+                                <rect key="frame" x="0.0" y="59" width="393" height="687.33333333333337"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="dDO-jA-fYW">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoAlbumCollectionViewCell" id="bmI-yE-u8y" customClass="PhotoAlbumCollectionViewCell" customModule="virtual_tourist" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="19.666666666666657" height="20.333333333333332"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="QD5-5h-FXZ">
+                                            <rect key="frame" x="0.0" y="0.0" width="19.666666666666657" height="20.333333333333332"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="6Qy-GD-KXW">
+                                                    <rect key="frame" x="0.0" y="0.99999999999999822" width="19.666666666666668" height="19"/>
+                                                </imageView>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="6Qy-GD-KXW" firstAttribute="leading" secondItem="QD5-5h-FXZ" secondAttribute="leading" id="I1L-pi-oSf"/>
+                                                <constraint firstItem="6Qy-GD-KXW" firstAttribute="top" secondItem="QD5-5h-FXZ" secondAttribute="top" id="fPu-cA-3Gq"/>
+                                                <constraint firstAttribute="bottom" secondItem="6Qy-GD-KXW" secondAttribute="bottom" id="fgA-8J-FoW"/>
+                                                <constraint firstAttribute="trailing" secondItem="6Qy-GD-KXW" secondAttribute="trailing" id="giQ-6i-YEq"/>
+                                            </constraints>
+                                        </collectionViewCellContentView>
+                                        <connections>
+                                            <outlet property="photoImageView" destination="6Qy-GD-KXW" id="UPc-jN-Rgi"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6DX-3w-fUb">
+                                <rect key="frame" x="122" y="762.33333333333337" width="149" height="35.666666666666629"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Reload Photos" cornerStyle="capsule">
+                                    <fontDescription key="titleFontDescription" type="boldSystem" pointSize="18"/>
+                                </buttonConfiguration>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="NxM-rn-1iq"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="s3w-W7-PfJ">
-                            <size key="itemSize" width="128" height="128"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        </collectionViewFlowLayout>
-                        <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="PhotoAlbumCollectionViewCell" id="RTn-iD-9eX" customClass="PhotoAlbumCollectionViewCell" customModule="virtual_tourist" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="0.0" width="19.666666666666657" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="1O8-Sj-mRb">
-                                    <rect key="frame" x="0.0" y="0.0" width="19.666666666666657" height="21"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo.circle.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="dQQ-8g-bQa">
-                                            <rect key="frame" x="0.0" y="0.99999999999999822" width="19.666666666666668" height="19.666666666666664"/>
-                                        </imageView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="dQQ-8g-bQa" firstAttribute="top" secondItem="1O8-Sj-mRb" secondAttribute="top" id="7Tl-V1-iM8"/>
-                                        <constraint firstAttribute="trailing" secondItem="dQQ-8g-bQa" secondAttribute="trailing" id="W6A-ow-cdC"/>
-                                        <constraint firstAttribute="bottom" secondItem="dQQ-8g-bQa" secondAttribute="bottom" id="gao-Rn-yB3"/>
-                                        <constraint firstItem="dQQ-8g-bQa" firstAttribute="leading" secondItem="1O8-Sj-mRb" secondAttribute="leading" id="mR9-4E-E1w"/>
-                                    </constraints>
-                                </collectionViewCellContentView>
-                                <connections>
-                                    <outlet property="photoImageView" destination="dQQ-8g-bQa" id="rfs-jX-XMn"/>
-                                </connections>
-                            </collectionViewCell>
-                        </cells>
-                        <connections>
-                            <outlet property="dataSource" destination="uHq-GT-HBV" id="Cv0-ne-5az"/>
-                            <outlet property="delegate" destination="uHq-GT-HBV" id="D9x-sn-AzG"/>
-                        </connections>
-                    </collectionView>
+                        <constraints>
+                            <constraint firstItem="NxM-rn-1iq" firstAttribute="trailing" secondItem="6DX-3w-fUb" secondAttribute="trailing" constant="122" id="GWs-nY-zTu"/>
+                            <constraint firstItem="soE-Je-Vvt" firstAttribute="leading" secondItem="NxM-rn-1iq" secondAttribute="leading" id="Ixv-si-g4h"/>
+                            <constraint firstItem="NxM-rn-1iq" firstAttribute="bottom" secondItem="6DX-3w-fUb" secondAttribute="bottom" constant="20" id="Qj7-5V-9hQ"/>
+                            <constraint firstItem="6DX-3w-fUb" firstAttribute="top" secondItem="soE-Je-Vvt" secondAttribute="bottom" constant="16" id="TK4-QK-RAL"/>
+                            <constraint firstItem="soE-Je-Vvt" firstAttribute="top" secondItem="NxM-rn-1iq" secondAttribute="top" id="Umh-HF-OzD"/>
+                            <constraint firstItem="NxM-rn-1iq" firstAttribute="trailing" secondItem="soE-Je-Vvt" secondAttribute="trailing" id="qYv-1P-tVv"/>
+                            <constraint firstItem="6DX-3w-fUb" firstAttribute="leading" secondItem="NxM-rn-1iq" secondAttribute="leading" constant="122" id="s9K-2t-DJs"/>
+                        </constraints>
+                    </view>
                     <connections>
-                        <outlet property="flowLayout" destination="s3w-W7-PfJ" id="OaO-z4-am2"/>
+                        <outlet property="collectionView" destination="soE-Je-Vvt" id="0GF-mI-ex1"/>
+                        <outlet property="flowLayout" destination="dDO-jA-fYW" id="wbY-h2-jON"/>
                     </connections>
-                </collectionViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="IHo-lv-Ewr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fXT-LV-XSU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="484.73282442748092" y="-166.19718309859155"/>
+            <point key="canvasLocation" x="596" y="-166"/>
         </scene>
     </scenes>
     <resources>
-        <image name="photo.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="photo.circle" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

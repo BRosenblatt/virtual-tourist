@@ -8,25 +8,27 @@
 import UIKit
 import CoreData
 
-class PhotoAlbumCollectionViewController: UICollectionViewController {
+class PhotoAlbumCollectionViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
+    
     var pin: Pin!
     var photos: [Photo] = []
     var dataController: DataController!
     
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var collectionView: UICollectionView!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.delegate = self
         collectionView.dataSource = self
-        
         setUpFlowLayout()
         fetchPhotos()
     }
     
     func setUpFlowLayout() {
         let space: CGFloat = 3.0
-        let width = (view.frame.size.width - (2 * space)) / 3.0
+        let width = (collectionView.frame.size.width - (2 * space)) / 3.0
         let height = width
         
         flowLayout.minimumLineSpacing = space
@@ -76,13 +78,13 @@ extension PhotoAlbumCollectionViewController {
     
     // MARK: - Get photo count
     
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return photos.count
     }
     
     // MARK: Set up custom cell
     
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoAlbumCollectionViewCell", for: indexPath) as! PhotoAlbumCollectionViewCell
         
         if photos.count >= indexPath.item, let imageData = photos[indexPath.item].imageData {
@@ -127,10 +129,15 @@ extension PhotoAlbumCollectionViewController {
     }
     
     // MARK: - Delete photo when tapped
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let photoToDelete = photos[indexPath.item]
-        photos.remove(at: indexPath.item)
-        collectionView.deleteItems(at: [indexPath])
-        dataController.viewContext.delete(photoToDelete)
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        dataController.viewContext.perform {
+            let photoToDelete = self.photos[indexPath.item]
+            self.photos.remove(at: indexPath.item)
+            collectionView.deleteItems(at: [indexPath])
+            self.dataController.viewContext.delete(photoToDelete)
+            try? self.dataController.viewContext.save()
+        }
     }
+    
+    
 }
