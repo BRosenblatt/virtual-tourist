@@ -46,7 +46,7 @@ class PhotoAlbumCollectionViewController: UIViewController, UICollectionViewData
         let photoIndexForPin = fetchPhotoIndexForPinFromCoreData()
         
         if photosForPin.isEmpty || photoIndexForPin == nil {
-            FlickrAPIClient.getPhotosList(lat: pin.latitude, long: pin.longitude, page: FlickrAPIClient.page, completion: handlePhotosResponse)
+            FlickrAPIClient.getPhotosList(lat: pin.latitude, long: pin.longitude, page: 1, completion: handlePhotosResponse)
             print("fetching from api")
         } else {
             photos = photosForPin
@@ -60,11 +60,13 @@ class PhotoAlbumCollectionViewController: UIViewController, UICollectionViewData
             print("Something went wrong")
             return
         }
+        
         for photoData in data.photo {
             let photo = Photo(context: self.dataController.viewContext)
             photo.id = photoData.id
             photo.secret = photoData.secret
             photo.server = photoData.server
+            photo.title = photoData.title
             photo.pinIdentifier = self.pin.identifier
             photo.imageData = nil
         }
@@ -84,10 +86,22 @@ class PhotoAlbumCollectionViewController: UIViewController, UICollectionViewData
             return
         }
         
+        // remove all photos from core data
+        for photo in photos {
+            dataController.viewContext.delete(photo)
+        }
+        
+        // remove all photos from photos array
+        photos.removeAll()
+        
+        // save
+        try? dataController.viewContext.save()
+        
+        // randomly generate page number in getPhotosList call to load new set of 20 photos into the collection view and core data
         let randomPage = randomlyGeneratePageNumber(maxPageCount: Int(photoIndex.pages))
         
         FlickrAPIClient.getPhotosList(lat: pin.latitude, long: pin.longitude, page: randomPage, completion: handlePhotosResponse(data:error:))
-        print(randomPage)
+        print("fetching page number: \(randomPage)")
     }
     
     func randomlyGeneratePageNumber(maxPageCount: Int) -> Int {
@@ -112,14 +126,13 @@ extension PhotoAlbumCollectionViewController {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoAlbumCollectionViewCell", for: indexPath) as! PhotoAlbumCollectionViewCell
-        
+
         if photos.count >= indexPath.item, let imageData = photos[indexPath.item].imageData {
             cell.photoImageView.image = UIImage(data: imageData)
         } else {
             let photo = photos[indexPath.item]
             FlickrAPIClient.requestImageFile(serverID: photo.server, secretID: photo.secret, id: photo.id) { image, error in
                 guard let image = image else {
-                    print("Couldn't fetch image")
                     return
                 }
                 self.saveImageData(image: image, photo: photo)
@@ -170,10 +183,13 @@ extension PhotoAlbumCollectionViewController {
     // MARK: - Delete photo when tapped
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         dataController.viewContext.perform {
+            // delete photo
             let photoToDelete = self.photos[indexPath.item]
             self.photos.remove(at: indexPath.item)
-            collectionView.deleteItems(at: [indexPath])
+            self.collectionView.deleteItems(at: [indexPath])
             self.dataController.viewContext.delete(photoToDelete)
+            
+            // save
             try? self.dataController.viewContext.save()
         }
     }

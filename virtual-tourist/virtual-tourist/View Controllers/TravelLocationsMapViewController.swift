@@ -47,7 +47,6 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
 
         // figure out how to get lat and long from x and y
         let coordinate = mapView.convert(location, toCoordinateFrom: mapView)
-        print(coordinate.latitude, coordinate.longitude)
         
         let annotation = MKPointAnnotation()
 
@@ -57,7 +56,6 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        print("shouldRecognizeSimultaneous called")
         return true
     }
     
@@ -70,11 +68,13 @@ class TravelLocationsMapViewController: UIViewController, MKMapViewDelegate, UIG
         // show pin after gesture initiated
         if pinView == nil {
             pinView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: reuseIdentifier)
-            pinView?.markerTintColor = .red
             pinView?.animatesWhenAdded = true
         } else {
             pinView?.annotation = annotation
         }
+        
+        pinView?.markerTintColor = .red
+
         return pinView
     }
     

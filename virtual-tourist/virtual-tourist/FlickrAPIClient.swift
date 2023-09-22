@@ -2,7 +2,7 @@
 //  FlickrAPIClient.swift
 //  virtual-tourist
 //
-//  Created by Matt Kauper on 9/13/23.
+//  Created by Becca Kauper on 9/13/23.
 //
 
 import Foundation
@@ -13,18 +13,17 @@ class FlickrAPIClient {
     static let apiKey = "970768dc71c88bce017f3e6f8173237f"
     static let photosPerPage = 20
     static let mediaType = "photos"
-    static var page: Int = 1
     
     enum Endpoint {
         static let baseURL = "https://www.flickr.com/services/rest/"
-        static let searchPhotoMethod = "flickr.photos.search" // https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=970768dc71c88bce017f3e6f8173237f&privacy_filter=1&media=photos&lat=0&lon=0&per_page=2&page=&format=rest
+        static let searchPhotoMethod = "flickr.photos.search"
         
-        case getPhotos(lat: Double, long: Double)
+        case getPhotos(lat: Double, long: Double, page: Int)
         case getImageFile(serverID: String, id: String, secretID: String)
         
         var stringValue: String {
             switch self {
-            case .getPhotos(let lat, let long):
+            case .getPhotos(let lat, let long, let page):
                 return Endpoint.baseURL + "?"
                 + "&method=\(Endpoint.searchPhotoMethod)"
                 + "&api_key=\(FlickrAPIClient.apiKey)"
@@ -34,7 +33,7 @@ class FlickrAPIClient {
                 + "&lat=\(lat)"
                 + "&lon=\(long)"
                 + "&per_page=\(FlickrAPIClient.photosPerPage)"
-                + "&page=\(FlickrAPIClient.page)"
+                + "&page=\(page)"
                 + "&format=json&nojsoncallback=1"
             case .getImageFile(let serverID, let id, let secretID):
                 return "https://live.staticflickr.com/"
@@ -52,8 +51,7 @@ class FlickrAPIClient {
     // MARK: - Call the searchPhotoMethod
     
     class func getPhotosList(lat: Double, long: Double, page: Int, completion: @escaping (PhotoObject?, Error?) -> Void) {
-        let photosEndpoint = Endpoint.getPhotos(lat: lat, long: long).url
-        print("photosEndpoint: \(photosEndpoint)")
+        let photosEndpoint = Endpoint.getPhotos(lat: lat, long: long, page: page).url
         let task = URLSession.shared.dataTask(with: photosEndpoint) { data, response, error in
             guard let data = data else {
                 DispatchQueue.main.async {

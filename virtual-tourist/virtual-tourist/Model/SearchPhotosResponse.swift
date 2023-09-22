@@ -2,7 +2,7 @@
 //  SearchPhotosResponse.swift
 //  virtual-tourist
 //
-//  Created by Matt Kauper on 9/13/23.
+//  Created by Becca Kauper on 9/13/23.
 //
 
 import Foundation

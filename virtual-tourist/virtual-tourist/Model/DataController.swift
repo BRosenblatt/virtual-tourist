@@ -2,7 +2,7 @@
 //  DataController.swift
 //  virtual-tourist
 //
-//  Created by Matt Kauper on 9/11/23.
+//  Created by Becca Kauper on 9/11/23.
 //
 
 import Foundation

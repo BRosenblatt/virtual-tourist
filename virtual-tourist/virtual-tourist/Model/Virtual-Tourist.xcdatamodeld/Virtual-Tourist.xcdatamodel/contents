@@ -6,6 +6,7 @@
         <attribute name="pinIdentifier" optional="YES" attributeType="String"/>
         <attribute name="secret" optional="YES" attributeType="String"/>
         <attribute name="server" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
         <relationship name="pin" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Pin" inverseName="photos" inverseEntity="Pin"/>
     </entity>
     <entity name="PhotoIndex" representedClassName="PhotoIndex" syncable="YES" codeGenerationType="class">
